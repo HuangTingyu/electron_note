@@ -3,6 +3,9 @@
  * @Description: 
  * @Date: 2025-02-09 14:38:58
  */
+/*
+global require
+*/
 const { app, BrowserWindow } = require('electron')
 const minWindow = function () {
 	let win = new BrowserWindow({
