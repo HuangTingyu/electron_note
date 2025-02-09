@@ -72,3 +72,54 @@ npm run dev
 ctrl+R
 ```
 
+
+
+### eslint配置
+
+```
+npm install -D eslint@9.5.0
+```
+
+```
+npm install @eslint/js
+```
+
+
+
+```
+npm init @eslint/config@latest
+```
+
+选项如下，
+
+第一个选“problem”
+
+```
+√ How would you like to use ESLint? · problems
+√ What type of modules does your project use? · esm
+√ Which framework does your project use? · none
+√ Does your project use TypeScript? · javascript
+√ Where does your code run? · browser                                           The config that you've selected requires the following dependencies:
+
+eslint, globals, @eslint/js
+√ Would you like to install them now? · No / Yes
+√ Which package manager do you want to use? · npm
+☕️Installing...
+
+up to date in 619ms
+
+39 packages are looking for funding
+  run `npm fund` for details
+Successfully created D:\00git\electron_note\code\eslint.config.mjs file.
+
+```
+
+
+
+最后项目底下会生成一个新文件
+
+```
+eslint.config.mjs
+```
+
+完成！
