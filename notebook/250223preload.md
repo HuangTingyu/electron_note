@@ -1,28 +1,86 @@
-<!--
- * @Author: sakurahuang
- * @Description: 
- * @Date: 2025-02-09 14:42:42
--->
- <!DOCTYPE html>
- <html lang="en">
- <head>
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>Document</title>
- </head>
- <body>
-	<button id="open-dev-tools">打开调试面板</button>
-	<button id="close-dev-tools">关闭调试面板</button>
-	<button id="get-version-info">获取系统信息</button>
-	<div style="display: none;" id="info-container">
-		<p>Node.js版本: <span id="node-version"></span></p>
-		<p>Chromium版本: <span id="chrome-version"></span></p>
-		<p>electron版本: <span id="electron-version"></span></p>
-	</div>
- </body>
- </html>
+## 配置详解
 
- <script>
+```
+new BrowserWindow({
+		width: 800,
+		height: 600,
+		webPreferences: {
+			zoomFactor: 2, //调大界面
+			nodeIntegration: true, // 允许渲染进程使用node模块
+			contextIsolation: false // 关闭js隔离，允许渲染进程使用Electron模块
+		}
+	})
+```
+
+不使用预加载脚本
+
+<img src=".\image\nodeIntegration.png" alt="nodeIntegration" style="zoom:50%;" />
+
+
+
+### 预加载脚本
+
+<img src=".\image\preload.png" alt="preload" style="zoom:50%;" />
+
+
+
+
+
+
+
+### 代码
+
+`index.js`
+
+`__dirname`是`nodejs`自带的方法，用于获取当前目录路径
+
+```js
+webPreferences: {
+			zoomFactor: 2, //调大界面
+			preload: path.join(__dirname, 'preload.js')//__dirname +'\\preload.js'
+		}
+```
+
+
+
+`preload.js`
+
+定义哪些api能被渲染进程使用
+
+```js
+const { ipcRenderer, contextBridge } = require('electron')
+console.log('preload test')
+
+contextBridge.exposeInMainWorld('tools', {
+	ipcSend: (msg) => {
+		ipcRenderer.send(msg)
+	},
+	ipcInvoke: (msg) => {
+		return ipcRenderer.invoke(msg)
+	}
+})
+
+
+contextBridge.exposeInMainWorld('versions', {
+	chrome: () => {
+		return process.versions.chrome
+	},
+	electron: () => {
+		return process.versions.electron
+	},
+	node: () => {
+		return process.versions.node
+	}
+})
+```
+
+
+
+`index.html`
+
+使用`preload.js` 中定义的api
+
+```js
 	// const { ipcRenderer } = require('electron')
 
 	let openDevTools = document.getElementById('open-dev-tools')
@@ -53,4 +111,5 @@
 	})
 
 	console.log(window.versions.chrome())
- </script>
+```
+
